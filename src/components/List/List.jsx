@@ -1,22 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export const List = () => {
-  const [name, onGetName] = useState("Вася");
+  const [films, onGetFilms] = useState([]);
 
-  const getList = () => {
-    fetch("/api/getList")
+  useEffect(() => {
+    fetch("/api/films")
       .then(res => {
         return res.json();
       })
       .then(data => {
-        onGetName(data.name);
+        onGetFilms(data.film_list);
       });
-  };
+  }, []);
+
   return (
     <div>
-      <div>List</div>
-      <div>Имя: {name}</div>
-      <div onClick={getList}>нажми</div>
+      {films.map((film, i) => (
+        <div key={i}>
+          <Link to={`/sessions/${film._id}`}>{film.name}</Link>
+        </div>
+      ))}
     </div>
   );
 };
